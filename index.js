@@ -23,7 +23,7 @@ const balances = users.map(user => {
   }))
 
   // create user balance with array of buddies
-  return { ...user, balance: 0, balances: buddyBalances }
+  return { ...user, totalExpenses: 0, balance: 0, balances: buddyBalances }
 })
 
 
@@ -36,14 +36,14 @@ expenses.forEach(expense => {
   const totalIncome = sharingUsers.reduce((sum, user) => sum + user.income, 0)
 
   const payer = users.find( user => user._id == payedBy )
-
   const anteilPayer = amount * (payer.income / totalIncome)
 
   // get account of payer
   const payerBalance = balances.find( balance => balance._id == payedBy )
 
-  // calculate outstanding remainder... and add it to total balance! 
+  // calculate outstanding remainder... and add it to total balance!
   payerBalance.balance += amount - anteilPayer
+  payerBalance.totalExpenses += amount
 
   // loop through the shared array and assign cost to these mothafuckazzz
   sharedBy.forEach( buddyId => {
@@ -59,11 +59,11 @@ expenses.forEach(expense => {
     // grab account of debitor
     const debitorBalance = balances.find( balance => balance._id == buddyId )
 
-    // assign the slice as credit for me against that dude
+    // assign the slice as credit for payer against that dude
     const buddyItem = payerBalance.balances.find(buddy => buddy._id == buddyId)
     buddyItem.balance += anteilBuddy
 
-    // assign the same slice as debt / minus to the balance of the dude
+    // assign the same slice as debt / minus for that the dude
     const payerItem = debitorBalance.balances.find(buddy => buddy._id == payedBy)
     payerItem.balance -= anteilBuddy
 
