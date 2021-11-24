@@ -56,18 +56,18 @@ expenses.forEach(expense => {
     // split amount by folks who have a share on that proportionally...
     const anteilBuddy = amount * (buddy.income / totalIncome)
 
-    // grab account of debitor
+    // grab account of buddy
     const debitorBalance = balances.find( balance => balance._id == buddyId )
 
-    // assign the slice as credit for payer against that dude
+    // assign the slice as credit for me against buddy
     const buddyItem = payerBalance.balances.find(buddy => buddy._id == buddyId)
     buddyItem.balance += anteilBuddy
 
-    // assign the same slice as debt / minus for that the dude
+    // assign the same slice as debt / minus for buddy agsint me
     const payerItem = debitorBalance.balances.find(buddy => buddy._id == payedBy)
     payerItem.balance -= anteilBuddy
 
-    // decrease total balance of "debitor"
+    // decrease total balance of buddy by owed amount
     debitorBalance.balance -= anteilBuddy
   })
   
